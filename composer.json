@@ -11,10 +11,8 @@
         "components/bootstrap": "^3.3",
         "robmorgan/phinx": "^0.6.6"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Rakshazi\SlimSuit\\": "src/"
-        }
+    "autoload": {
+        "psr-4": {"Rakshazi\\SlimSuit\\": "src/"}
     },
 	"scripts": {
         "start": "php -S 0.0.0.0:8080 -t public public/index.php",
