@@ -1,0 +1,24 @@
+{
+    "name": "rakshazi/slim-suit",
+    "description": "Dependencies and some wrappers for Slim framework which used in every project",
+    "homepage": "http://github.com/rakshazi/slim-suit",
+    "license": "MIT",
+    "require": {
+        "php": "^7.0",
+        "slim/slim": "^3.1",
+        "slim/twig-view": "^2.2",
+        "catfan/medoo": "^1.1",
+        "components/bootstrap": "^3.3",
+        "robmorgan/phinx": "^0.6.6"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rakshazi\SlimSuit\\": "src/"
+        }
+    },
+	"scripts": {
+        "start": "php -S 0.0.0.0:8080 -t public public/index.php",
+        "test": "phpunit"
+	}
+
+}
