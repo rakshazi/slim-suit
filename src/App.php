@@ -1,5 +1,5 @@
 <?php
-namespace \Rakshazi\SlimSuit;
+namespace Rakshazi\SlimSuit;
 
 class App extends \Slim\App
 {
@@ -28,7 +28,7 @@ class App extends \Slim\App
             $route['action'] = $route['action'] ?? 'index';
             $route['methods'] = $route['methods'] ?? ['GET'];
             $this->map($route['methods'], $pattern, function ($request, $response, $args) use ($route) {
-                return $this->getContainer()->get('controller_'.lcfirst($route['controller']))->call(
+                return $this->get('controller_'.lcfirst($route['controller']))->call(
                     $route['action'],
                     $request,
                     $response,

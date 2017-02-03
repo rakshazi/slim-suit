@@ -1,5 +1,5 @@
 <?php
-namespace \Rakshazi\SlimSuit;
+namespace Rakshazi\SlimSuit;
 
 abstract class Entity
 {
