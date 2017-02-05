@@ -7,9 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 class Controller
 {
     /**
-     * @var \Pimple\Container
+     * @var \Rakshazi\SlimSuit\App
      */
-    protected $container;
+    protected $app;
 
     /**
      * @var ServerRequestInterface
@@ -21,9 +21,9 @@ class Controller
      */
     protected $response;
 
-    public function __construct(\Pimple\Container $container)
+    public function __construct(\Rakshazi\SlimSuit\App $app)
     {
-        $this->container = $container;
+        $this->app = $app;
     }
 
     /**

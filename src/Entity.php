@@ -4,18 +4,18 @@ namespace Rakshazi\SlimSuit;
 abstract class Entity
 {
     /**
-     * @var \Pimple\Container
+     * @var \Rakshazi\SlimSuit\App
      */
-    protected $container;
+    protected $app;
 
     /**
      * @var array
      */
     protected $data;
 
-    public function __construct(\Pimple\Container $container)
+    public function __construct(\Rakshazi\SlimSuit\App $app)
     {
-        $this->container = $container;
+        $this->app = $app;
     }
 
     /**
@@ -37,7 +37,7 @@ abstract class Entity
     public function set(string $key, $value)
     {
         $this->data[$key] = $value;
-        $this->container['db']->update($this->getTable(), [$key => $value]);
+        $this->app->getContainer()->db->update($this->getTable(), [$key => $value]);
     }
 
     /**
@@ -60,7 +60,7 @@ abstract class Entity
     public function insert(array $data): int
     {
         $this->data = $data;
-        return $this->container['db']->insert($this->getTable(), $data);
+        return $this->app->getContainer()->db->insert($this->getTable(), $data);
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class Entity
      */
     public function load($value, $field = 'id'): \Rakshazi\SlimSuit\Entity
     {
-        $this->data = $this->container['db']->select($this->getTable(), '*', [$field => $value])[0];
+        $this->data = $this->app->getContainer()->db->select($this->getTable(), '*', [$field => $value])[0];
 
         return $this;
     }
@@ -85,8 +85,8 @@ abstract class Entity
     {
         $collection = [];
         $class = substr(strrchr('\\'.get_class($this), '\\'), 1); //Get class name without namespace
-        foreach ($this->container['db']->select($this->getTable(), '*', $where) as $data) {
-            $collection[] = $this->container['entity_'.lcfirst($class)]->setData($data);
+        foreach ($this->app->getContainer()->db->select($this->getTable(), '*', $where) as $data) {
+            $collection[] = $this->app->getEntity(ucfirst($class))->setData($data);
         }
 
         return $collection;
