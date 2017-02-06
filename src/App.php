@@ -7,7 +7,7 @@ class App extends \Slim\App
     {
         parent::__construct($container);
 
-        $this->container['db'] = function ($c) {
+        $this->getContainer()['db'] = function ($c) {
             return new \medoo($c->get('settings')['database']);
         };
     }
@@ -36,8 +36,9 @@ class App extends \Slim\App
             $route['controller'] = $route['controller'] ?? 'default';
             $route['action'] = $route['action'] ?? 'index';
             $route['methods'] = $route['methods'] ?? ['GET'];
-            $this->map($route['methods'], $pattern, function ($request, $response, $args) use ($route) {
-                return $this->getController($route['controller'])->call(
+            $app = $this;
+            $this->map($route['methods'], $pattern, function ($request, $response, $args) use ($app, $route) {
+                return $app->getController($route['controller'])->call(
                     $route['action'],
                     $request,
                     $response,
@@ -54,7 +55,7 @@ class App extends \Slim\App
      */
     public function getEntity(string $name): \Rakshazi\SlimSuit\Entity
     {
-        return $this->getByPrefix($this->container->settings['prefix']['entity'], $name);
+        return $this->getByPrefix($this->getContainer()->settings['prefix']['entity'], $name);
     }
 
     /**
@@ -64,7 +65,7 @@ class App extends \Slim\App
      */
     public function getController(string $name): \Rakshazi\SlimSuit\Controller
     {
-        return $this->getByPrefix($this->container->settings['prefix']['controller'], $name);
+        return $this->getByPrefix($this->getContainer()->settings['prefix']['controller'], $name);
     }
 
     /**
@@ -73,14 +74,14 @@ class App extends \Slim\App
      * @param string $name Class name, eg: Entity
      * @return object
      */
-    protected function getByPrefix(string $prefix, string $name): object
+    protected function getByPrefix(string $prefix, string $name)
     {
-        if ($this->container->has($prefix.'_'.$name)) {
-            return $this->container->get($prefix.'_'.$name);
+        if ($this->getContainer()->has($prefix.'_'.$name)) {
+            return $this->getContainer()->get($prefix.'_'.$name);
         }
 
         $app = $this;
-        $this->container[$prefix.'_'.$name] = function ($container) use ($app) {
+        $this->getContainer()[$prefix.'_'.$name] = function ($container) use ($app, $prefix, $name) {
             $class = ucfirst($prefix).'\\'.ucfirst($name);
             return new $class($app);
         };
