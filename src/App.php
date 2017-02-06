@@ -55,7 +55,7 @@ class App extends \Slim\App
      */
     public function getEntity(string $name): \Rakshazi\SlimSuit\Entity
     {
-        return $this->getByPrefix($this->getContainer()->settings['prefix']['entity'], $name);
+        return $this->getByPrefix($this->getContainer()->settings['prefix']['entity'], $name, true);
     }
 
     /**
@@ -72,19 +72,26 @@ class App extends \Slim\App
      * Get instance of the object by prefix, eg: get entity
      * @param string $prefix Class prefix, eg: \Rakshazi\SlimSuit
      * @param string $name Class name, eg: Entity
+     * @param bool $factory Get factory or not
      * @return object
      */
-    protected function getByPrefix(string $prefix, string $name)
+    protected function getByPrefix(string $prefix, string $name, $factory = false)
     {
         if ($this->getContainer()->has($prefix.'_'.$name)) {
             return $this->getContainer()->get($prefix.'_'.$name);
         }
 
         $app = $this;
-        $this->getContainer()[$prefix.'_'.$name] = function ($container) use ($app, $prefix, $name) {
+        $instance = function ($container) use ($app, $prefix, $name) {
             $class = ucfirst($prefix).'\\'.ucfirst($name);
             return new $class($app);
         };
+
+        if ($factory) {
+            $instance = $this->getContainer()->factory($instance);
+        }
+
+        $this->getContainer()[$prefix.'_'.$name] = $instance;
 
         return $this->getByPrefix($prefix, $name);
     }
