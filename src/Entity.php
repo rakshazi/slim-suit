@@ -71,7 +71,8 @@ abstract class Entity
      */
     public function load($value, $field = 'id'): \Rakshazi\SlimSuit\Entity
     {
-        $this->data = $this->app->getContainer()->db->select($this->getTable(), '*', [$field => $value])[0];
+        $data = $this->app->getContainer()->db->select($this->getTable(), '*', [$field => $value]);
+        $this->data = $data[0] ?? [];
 
         return $this;
     }
