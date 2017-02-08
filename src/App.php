@@ -69,6 +69,16 @@ class App extends \Slim\App
     }
 
     /**
+     * Get instance of helper object by name
+     * @param string $name Helper name, eg: Time
+     * @return \Rakshazi\SlimSuit\Helper
+     */
+    public function getHelper(string $name): \Rakshazi\SlimSuit\Helper
+    {
+        return $this->getByPrefix($this->getContainer()->settings['prefix']['helper'], $name);
+    }
+
+    /**
      * Get instance of the object by prefix, eg: get entity
      * @param string $prefix Class prefix, eg: \Rakshazi\SlimSuit
      * @param string $name Class name, eg: Entity
