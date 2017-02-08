@@ -8,7 +8,7 @@ class App extends \Slim\App
         parent::__construct($container);
 
         $this->getContainer()['db'] = function ($c) {
-            return new \medoo($c->get('settings')['database']);
+            return new \Medoo\Medoo($c->get('settings')['database']);
         };
     }
 

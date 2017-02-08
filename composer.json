@@ -7,7 +7,7 @@
         "php": "^7.0",
         "slim/slim": "^3.1",
         "slim/twig-view": "^2.2",
-        "catfan/medoo": "^1.1",
+        "catfan/medoo": "dev-master",
         "components/bootstrap": "^3.3",
         "robmorgan/phinx": "^0.6.6"
     },

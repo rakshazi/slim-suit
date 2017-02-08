@@ -60,7 +60,8 @@ abstract class Entity
     public function insert(array $data): int
     {
         $this->data = $data;
-        return $this->app->getContainer()->db->insert($this->getTable(), $data);
+        $this->app->getContainer()->db->insert($this->getTable(), $data);
+        return $this->app->getContainer()->db->id();
     }
 
     /**
@@ -91,6 +92,13 @@ abstract class Entity
         }
 
         return $collection;
+    }
+
+    public function delete(): bool
+    {
+        return (bool)$this->app->getContainer()->db->delete($this->getTable(), [
+            'id' => $this->get('id')
+        ]);
     }
 
     /**
