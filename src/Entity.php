@@ -11,7 +11,7 @@ abstract class Entity
     /**
      * @var array
      */
-    protected $data;
+    protected $data = [];
 
     public function __construct(\Rakshazi\SlimSuit\App $app)
     {
@@ -30,18 +30,26 @@ abstract class Entity
     }
 
     /**
-     * Set data (row) by key. Autoupdate DB
+     * Set data (row) by key.
      * @param string $key
      * @param mixed $value
      */
     public function set(string $key, $value)
     {
         $this->data[$key] = $value;
-        $this->app->getContainer()->db->update($this->getTable(), [$key => $value]);
     }
 
     /**
-     * Set all data to entity, without inserting in db
+     * Return all entity data as array
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set all data to entity
      * @param array $data
      * @return \Rakshazi\SlimSuit\Entity
      */
@@ -53,15 +61,30 @@ abstract class Entity
     }
 
     /**
+     * Save entity data in db
+     */
+    public function save()
+    {
+        if ($this->get('id')) {
+            $this->app->getContainer()->db->update($this->getTable(), $this->data, ['id' => $this->get('id')]);
+        } else {
+            $this->app->getContainer()->db->insert($this->getTable(), $this->data);
+            $this->set('id', $this->app->getContainer()->db->id());
+        }
+    }
+
+    /**
      * Insert entity data into db
+     * @deprecated use save() instead
      * @param array $data
      * @return int Row id from db
      */
     public function insert(array $data): int
     {
         $this->data = $data;
-        $this->app->getContainer()->db->insert($this->getTable(), $data);
-        return $this->app->getContainer()->db->id();
+        $this->save();
+
+        return $this->get('id');
     }
 
     /**
@@ -94,6 +117,10 @@ abstract class Entity
         return $collection;
     }
 
+    /**
+     * Delete entity row from db
+     * @return bool
+     */
     public function delete(): bool
     {
         return (bool)$this->app->getContainer()->db->delete($this->getTable(), [
