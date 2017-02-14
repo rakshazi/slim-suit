@@ -3,13 +3,41 @@ namespace Rakshazi\SlimSuit;
 
 class App extends \Slim\App
 {
+    /**
+     * Path to config files
+     * Not in container because of realisation nuances
+     * @var string
+     */
+    protected $config_dir;
+
     public function __construct($container = [])
     {
-        parent::__construct($container);
+        if (count($container) == 1) {
+            $this->config_dir = $container[0];
+            $container = $this->getConfig('core');
+        }
 
-        $this->getContainer()['db'] = function ($c) {
-            return new \Medoo\Medoo($c->get('settings')['database']);
-        };
+        parent::__construct($container);
+        $this->initDependencies();
+        $this->route($this->getConfig('routes'));
+    }
+
+    /**
+     * Get config from config files
+     * @param string $file Filename (without extension), eg: routes
+     * @return array
+     */
+    public function getConfig(string $file): array
+    {
+        $config = $this->getContainer()['config'][$file] ?? null;
+        if (!$config) {
+            $data = require $this->config_dir . '/' . $file;
+            $this->getContainer()['config'][$file] = $data;
+
+            return $this->getContainer()['config'][$file];
+        }
+
+        return $config;
     }
 
     /**
@@ -104,5 +132,27 @@ class App extends \Slim\App
         $this->getContainer()[$prefix.'_'.$name] = $instance;
 
         return $this->getByPrefix($prefix, $name);
+    }
+
+    /**
+     * Add dependencies (such as db and view) into container
+     */
+    protected function initDependencies()
+    {
+        $this->getContainer()['db'] = function ($c) {
+            return new \Medoo\Medoo($c->get('settings')['database']);
+        };
+
+        $this->getContainer()['view'] = function ($container) {
+            $settings = $container->get('settings')['view'];
+            $view = new \Slim\Views\Twig($settings['template_path'], [
+                'cache' => $settings['cache_path']
+            ]);
+            // Instantiate and add Slim specific extension
+            $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
+            $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
+
+            return $view;
+        };
     }
 }
