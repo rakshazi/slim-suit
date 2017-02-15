@@ -12,7 +12,8 @@ class App extends \Slim\App
 
     public function __construct($container = [])
     {
-        if (count($container) == 1) {
+        parent::__construct();
+        if (count($container) == 1 && isset($container[0])) {
             $this->config_dir = $container[0];
             $container = $this->getConfig('core');
         }
@@ -29,15 +30,16 @@ class App extends \Slim\App
      */
     public function getConfig(string $file): array
     {
-        $config = $this->getContainer()['config'][$file] ?? null;
-        if (!$config) {
-            $data = require $this->config_dir . '/' . $file;
-            $this->getContainer()['config'][$file] = $data;
+        if (!$this->getContainer()->has('config_'.$file)) {
+            $data = require $this->config_dir . $file . '.php';
+            $this->getContainer()['config_'.$file] = function ($container) use ($data) {
+                return $data;
+            };
 
-            return $this->getContainer()['config'][$file];
+            return $this->getConfig($file);
         }
 
-        return $config;
+        return $this->getContainer()['config_'.$file];
     }
 
     /**
@@ -150,7 +152,7 @@ class App extends \Slim\App
             ]);
             // Instantiate and add Slim specific extension
             $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
-            $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
+            $view->addExtension(new \Slim\Views\TwigExtension($container['router'], $basePath));
 
             return $view;
         };
