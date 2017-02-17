@@ -71,6 +71,8 @@ abstract class Entity
             $this->app->getContainer()->db->insert($this->getTable(), $this->data);
             $this->set('id', $this->app->getContainer()->db->id());
         }
+        $this->app->getContainer()->flash
+            ->addMessage('success', substr(strrchr(__CLASS__, "\\"), 1).' #'.$this->get('id').' has been saved');
     }
 
     /**

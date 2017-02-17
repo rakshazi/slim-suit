@@ -141,8 +141,12 @@ class App extends \Slim\App
      */
     protected function initDependencies()
     {
-        $this->getContainer()['db'] = function ($c) {
-            return new \Medoo\Medoo($c->get('settings')['database']);
+        $this->getContainer()['db'] = function ($container) {
+            return new \Medoo\Medoo($container->get('settings')['database']);
+        };
+
+        $this->getContainer()['flash'] = function ($container) {
+            return new \Slim\Flash\Messages();
         };
 
         $this->getContainer()['view'] = function ($container) {
@@ -153,6 +157,7 @@ class App extends \Slim\App
             // Instantiate and add Slim specific extension
             $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
             $view->addExtension(new \Slim\Views\TwigExtension($container['router'], $basePath));
+            $view->addExtension(new \Knlv\Slim\Views\TwigMessages(new \Slim\Flash\Messages()));
 
             return $view;
         };
