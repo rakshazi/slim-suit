@@ -120,6 +120,16 @@ abstract class Entity
     }
 
     /**
+     * Get count of items by $where conditions
+     * @param array $where Where clause
+     * @return int
+     */
+    public function count($where = []): int
+    {
+        return $this->app->getContainer()->db->count($this->getTable(), $where);
+    }
+
+    /**
      * Delete entity row from db
      * @return bool
      */
