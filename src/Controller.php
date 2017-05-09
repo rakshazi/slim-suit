@@ -39,4 +39,15 @@ class Controller
         $this->response = $response;
         return call_user_func([$this, $action.'Action']);
     }
+
+    /**
+     * Render view, just shortcut to `$this->app->getContainer()->view->render()`
+     * @param string $file View file
+     * @param array $variables List of variables passed to view
+     * @return ReponseInterface
+     */
+    public function render(string $file, array $variables): ResponseInterface
+    {
+        return $this->app->getContainer()->view->render($this->response, $file, $variables);
+    }
 }
