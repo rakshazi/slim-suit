@@ -7,6 +7,12 @@ use Psr\Http\Message\ResponseInterface;
 class Controller
 {
     /**
+     * Adopted for SlimSuit version of rakshazi/get-set-trait package
+     * @link https://github.com/rakshazi/getSetTrait
+     */
+    use Utils\GetSetTrait;
+
+    /**
      * @var \Rakshazi\SlimSuit\App
      */
     protected $app;

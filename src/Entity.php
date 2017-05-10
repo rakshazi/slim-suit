@@ -3,6 +3,13 @@ namespace Rakshazi\SlimSuit;
 
 abstract class Entity
 {
+
+    /**
+     * Adopted for SlimSuit version of rakshazi/get-set-trait package
+     * @link https://github.com/rakshazi/getSetTrait
+     */
+    use Utils\GetSetTrait;
+
     /**
      * @var \Rakshazi\SlimSuit\App
      */
@@ -16,27 +23,6 @@ abstract class Entity
     public function __construct(\Rakshazi\SlimSuit\App $app)
     {
         $this->app = $app;
-    }
-
-    /**
-     * Get data (row) by key. Return default if data not found
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function get(string $key, $default = null)
-    {
-        return $this->data[$key] ?? $default;
-    }
-
-    /**
-     * Set data (row) by key.
-     * @param string $key
-     * @param mixed $value
-     */
-    public function set(string $key, $value)
-    {
-        $this->data[$key] = $value;
     }
 
     /**
@@ -65,11 +51,11 @@ abstract class Entity
      */
     public function save()
     {
-        if ($this->get('id')) {
-            $this->app->getContainer()->db->update($this->getTable(), $this->data, ['id' => $this->get('id')]);
+        if ($this->getId()) {
+            $this->app->getContainer()->db->update($this->getTable(), $this->data, ['id' => $this->getId()]);
         } else {
             $this->app->getContainer()->db->insert($this->getTable(), $this->data);
-            $this->set('id', $this->app->getContainer()->db->id());
+            $this->setId($this->app->getContainer()->db->id());
         }
     }
 
@@ -134,7 +120,7 @@ abstract class Entity
     public function delete(): bool
     {
         return (bool)$this->app->getContainer()->db->delete($this->getTable(), [
-            'id' => $this->get('id')
+            'id' => $this->getId()
         ]);
     }
 
