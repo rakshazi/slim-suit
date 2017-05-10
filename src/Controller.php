@@ -52,7 +52,7 @@ class Controller
      * @param array $variables List of variables passed to view
      * @return ReponseInterface
      */
-    public function render(string $file, array $variables): ResponseInterface
+    public function render(string $file, array $variables = []): ResponseInterface
     {
         return $this->app->getContainer()->view->render($this->response, $file, $variables);
     }
