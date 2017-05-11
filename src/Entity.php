@@ -48,6 +48,7 @@ abstract class Entity
 
     /**
      * Save entity data in db
+     * @return \Rakshazi\SlimSuit\Entity
      */
     public function save()
     {
@@ -57,6 +58,8 @@ abstract class Entity
             $this->app->getContainer()->db->insert($this->getTable(), $this->data);
             $this->setId($this->app->getContainer()->db->id());
         }
+
+        return $this;
     }
 
     /**
