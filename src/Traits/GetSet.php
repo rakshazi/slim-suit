@@ -1,11 +1,11 @@
 <?php
-namespace Rakshazi\SlimSuit\Utils;
+namespace Rakshazi\SlimSuit\Traits;
 
 /**
  * Adopted for SlimSuit version of rakshazi/get-set-trait package
  * @link https://github.com/rakshazi/getSetTrait
  */
-trait GetSetTrait
+trait GetSet
 {
     /**
      * @var array
