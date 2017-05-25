@@ -45,9 +45,9 @@ class Root implements \ArrayAccess, \Serializable
      * Render view, just shortcut to `$this->app->getContainer()->view->render()`
      * @param string $file View file
      * @param array $variables List of variables passed to view
-     * @return ReponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function render(string $file, array $variables = []): ResponseInterface
+    public function render(string $file, array $variables = []): \Psr\Http\Message\ResponseInterface
     {
         return $this->view->render($this->response, $file, $variables);
     }
