@@ -19,7 +19,7 @@ class Root implements \ArrayAccess, \Serializable
     /**
      * @var array
      */
-    protected $data;
+    protected $data = [];
 
     public function __construct(\Rakshazi\SlimSuit\App $app)
     {
