@@ -20,6 +20,8 @@ class Controller extends Root
      */
     public function call(string $action, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
+        $this->request = $request;
+        $this->response = $response;
         return call_user_func([$this, $action.'Action']);
     }
 }
