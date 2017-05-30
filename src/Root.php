@@ -53,6 +53,17 @@ class Root implements \ArrayAccess, \Serializable
     }
 
     /**
+     * Redirect, just shortuct to `$this->response->withStatus($httpCode)->withHeader('Location', $url)`
+     * @param string $url Url to redirect
+     * @param int $httpCode HTTP status code, default: 301
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function redirect(string $url, int $httpCode = 301): \Psr\Http\Message\ResponseInterface
+    {
+        return $this->response->withStatus($httpCode)->withHeader('Location', $url);
+    }
+
+    /**
      * Add flash message, just shortcut to `$this->app->getContainer()->flash->addMessage()`
      * @param string $key
      * @param string $message
