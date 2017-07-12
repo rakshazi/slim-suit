@@ -2,11 +2,10 @@
 language: "php"
 
 php:
-  - 7.0
   - 7.1
 
 before_script:
-- composer install --dev
+- composer install
 
 script:
 - vendor/bin/codecept run unit --coverage
