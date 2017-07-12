@@ -68,10 +68,17 @@ class App extends \Slim\App
             $route['methods'] = $route['methods'] ?? ['GET'];
             $app = $this;
             $this->map($route['methods'], $pattern, function ($request, $response, $args) use ($app, $route) {
+                //Tiny hack to provide currend request and response object to all users of container, not only
+                //current controller
+                $app->getContainer()['current_request'] = function ($c) use ($request) {
+                    return $request;
+                };
+                $app->getContainer()['current_response'] = function ($c) use ($response) {
+                    return $response;
+                };
+
                 return $app->getController($route['controller'])->call(
                     $route['action'],
-                    $request,
-                    $response,
                     $args
                 );
             });

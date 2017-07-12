@@ -1,7 +1,6 @@
 <?php
 namespace Rakshazi\SlimSuit;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Controller extends Root
@@ -14,14 +13,10 @@ class Controller extends Root
     /**
      * Call controller action
      * @param string $action
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function call(string $action, ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function call(string $action): ResponseInterface
     {
-        $this->request = $request;
-        $this->response = $response;
         return call_user_func([$this, $action.'Action']);
     }
 }
