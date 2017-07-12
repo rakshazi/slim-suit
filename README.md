@@ -1,4 +1,4 @@
-# Slim Suit
+# Slim Suit [![Build Status](https://travis-ci.org/rakshazi/slim-suit.svg?branch=master)](https://travis-ci.org/rakshazi/slim-suit)
 
 Swissknife for Slim (ORM, MVC, etc)
 

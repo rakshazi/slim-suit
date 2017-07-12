@@ -15,5 +15,8 @@
     },
     "autoload": {
         "psr-4": {"Rakshazi\\SlimSuit\\": "src/"}
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.3"
     }
 }
