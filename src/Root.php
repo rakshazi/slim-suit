@@ -40,7 +40,6 @@ class Root implements \ArrayAccess, \Serializable
         return null;
     }
 
-
     /**
      * Render view, just shortcut to `$this->app->getContainer()->view->render()`
      * @param string $file View file
@@ -49,6 +48,10 @@ class Root implements \ArrayAccess, \Serializable
      */
     public function render(string $file, array $variables = []): \Psr\Http\Message\ResponseInterface
     {
+        if (!$this->app->getContainer()->has('view')) {
+            return $this->response->withStatus(400);
+        }
+
         return $this->view->render($this->response, $file, $variables);
     }
 
@@ -71,6 +74,10 @@ class Root implements \ArrayAccess, \Serializable
      */
     public function flash(string $key, string $message, bool $currentRequest = false)
     {
+        if (!$this->app->getContainer()->has('flash')) {
+            return false;
+        }
+
         if ($currentRequest) {
             $this->flash->addMessageNow($key, $message);
         } else {

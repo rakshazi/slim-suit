@@ -152,21 +152,27 @@ class App extends \Slim\App
             return new \Medoo\Medoo($container->get('settings')['database']);
         };
 
-        $this->getContainer()['flash'] = function ($container) {
-            return new \Slim\Flash\Messages();
-        };
+        if (class_exists('\Slim\Flash\Messages')) {
+            $this->getContainer()['flash'] = function ($container) {
+                return new \Slim\Flash\Messages();
+            };
+        }
 
-        $this->getContainer()['view'] = function ($container) {
-            $settings = $container->get('settings')['view'];
-            $view = new \Slim\Views\Twig($settings['template_path'], [
+        if (class_exists('\Slim\Views\Twig')) {
+            $this->getContainer()['view'] = function ($container) {
+                $settings = $container->get('settings')['view'];
+                $view = new \Slim\Views\Twig($settings['template_path'], [
                 'cache' => $settings['cache_path']
             ]);
             // Instantiate and add Slim specific extension
             $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
-            $view->addExtension(new \Slim\Views\TwigExtension($container['router'], $basePath));
-            $view->addExtension(new \Knlv\Slim\Views\TwigMessages(new \Slim\Flash\Messages()));
+                $view->addExtension(new \Slim\Views\TwigExtension($container['router'], $basePath));
+                if (class_exists('\Knlv\Slim\Views\TwigMessages')) {
+                    $view->addExtension(new \Knlv\Slim\Views\TwigMessages(new \Slim\Flash\Messages()));
+                }
 
-            return $view;
-        };
+                return $view;
+            };
+        }
     }
 }
