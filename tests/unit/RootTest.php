@@ -23,6 +23,8 @@ class RootTest extends \Codeception\Test\Unit
     {
         $response = $this->root->render('test.html', ['test' => 'passed']);
         $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
-        $this->assertContains('passed', $response->getBody()->__toString());
+        if (class_exists('\Slim\Views\Twig')) {
+            $this->assertContains('passed', $response->getBody()->__toString());
+        }
     }
 }
