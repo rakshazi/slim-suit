@@ -13,6 +13,7 @@ return [
             'cache_path' => false,
         ],
         'database' => [
+            'class' => '\Medoo\Medoo',
             'database_type' => 'mysql',
             'database_name' => 'slim_skeleton',
             'server' => 'db',

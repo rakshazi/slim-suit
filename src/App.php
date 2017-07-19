@@ -149,7 +149,8 @@ class App extends \Slim\App
     protected function initDependencies()
     {
         $this->getContainer()['db'] = function ($container) {
-            return new \Medoo\Medoo($container->get('settings')['database']);
+            $class = $container->get('settings')['database']['class'] ?? '\Medoo\Medoo';
+            return new $class($container->get('settings')['database']);
         };
 
         if (class_exists('\Slim\Flash\Messages')) {
