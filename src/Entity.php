@@ -71,13 +71,19 @@ abstract class Entity extends Root
     /**
      * Get all entities from db
      * @param array $where Where clause
+     * @param bool $assoc Return data as array, not as entity object collection
      * @return \Rakshazi\SlimSuit\Entity[]
      */
-    public function loadAll($where = []): array
+    public function loadAll($where = [], bool $assoc = false): array
     {
+        $allData = $this->db->select($this->getTable(), '*', $where);
+        if ($assoc) {
+            return $allData;
+        }
+
         $collection = [];
         $class = substr(strrchr('\\'.get_class($this), '\\'), 1); //Get class name without namespace
-        foreach ($this->app->getContainer()->db->select($this->getTable(), '*', $where) as $data) {
+        foreach ($allData as $data) {
             $collection[] = $this->app->getEntity(ucfirst($class))->setData($data);
         }
 
